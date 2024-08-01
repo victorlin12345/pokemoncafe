@@ -14,7 +14,7 @@ let EMAIL = "victorlin12345@gmail.com"
 
 // target calendar cell index, if < 0 will get the first available day (optoinal)
 // reference: https://reserve.pokemon-cafe.jp/reserve/step2
-let TARGET_CELL_INDEX = 0; 
+let TARGET_CELL_INDEX = -1; 
 
 
 async function run() {
