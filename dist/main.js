@@ -20,7 +20,7 @@ let PHONE = "88888888";
 let EMAIL = "victorlin12345@gmail.com";
 // target calendar cell index, if < 0 will get the first available day (optoinal)
 // reference: https://reserve.pokemon-cafe.jp/reserve/step2
-let TARGET_CELL_INDEX = 0;
+let TARGET_CELL_INDEX = -1;
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         const driver = yield new selenium_webdriver_1.Builder().forBrowser(selenium_webdriver_1.Browser.CHROME).build();
