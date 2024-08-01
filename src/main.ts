@@ -1,11 +1,21 @@
 import { Builder, Browser, By, until, WebElement, WebDriver } from "selenium-webdriver";
 
-// number of people
+// number of people (required)
 const NUM_PEOPLE = 2;  
 
-// target calendar cell index, if < 0 will get the first available day
+// reserve name (required)
+let NAME = "PIKACHU"
+
+// reserve phone (required)
+let PHONE = "88888888"
+
+// authentication email (required)
+let EMAIL = "victorlin12345@gmail.com"
+
+// target calendar cell index, if < 0 will get the first available day (optoinal)
 // reference: https://reserve.pokemon-cafe.jp/reserve/step2
-let TARGET_CELL_INDEX = 0;  
+let TARGET_CELL_INDEX = 0; 
+
 
 async function run() {
     const driver = await new Builder().forBrowser(Browser.CHROME).build();
@@ -114,16 +124,16 @@ async function run() {
                 await driver.wait(until.elementLocated(By.id("name")), 1000).then(async () => {
                     await driver
                         .findElement(By.id("name"))
-                        .sendKeys("Cheng Wen Lin");
+                        .sendKeys(NAME);
                     await driver
                         .findElement(By.id("name_kana"))
-                        .sendKeys("Cheng Wen Lin");
+                        .sendKeys(NAME);
                     await driver
                         .findElement(By.id("phone_number"))
-                        .sendKeys("0970982035");
+                        .sendKeys(PHONE);
                     await driver
                         .findElement(By.id("email"))
-                        .sendKeys("victorlin12345@gmail.com");
+                        .sendKeys(EMAIL);
                     await driver
                         .findElement(By.xpath("//input[@name='commit']"))
                         .click();
