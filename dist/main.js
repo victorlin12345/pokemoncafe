@@ -10,18 +10,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const selenium_webdriver_1 = require("selenium-webdriver");
-// 1. Create a new Builder instance
-// 2. Connect to the browser
-// 3. Connect to pokemon web
-// 4. Iterate every 10 minutes?
-// 5. check for May 15 - 17 spots
-// 6. If spots are available, take spot
-// 6b. Priority for seating A
-// Return if not available
-// 7. Fill input
-// 8. Await input on access code?
+// number of people (required)
 const NUM_PEOPLE = 2;
-let targetCellIndex = 0; // target cell number, if < 0 will get the first available day
+// reserve name (required)
+let NAME = "PIKACHU";
+// reserve phone (required)
+let PHONE = "88888888";
+// authentication email (required)
+let EMAIL = "victorlin12345@gmail.com";
+// target calendar cell index, if < 0 will get the first available day (optoinal)
+// reference: https://reserve.pokemon-cafe.jp/reserve/step2
+let TARGET_CELL_INDEX = 0;
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         const driver = yield new selenium_webdriver_1.Builder().forBrowser(selenium_webdriver_1.Browser.CHROME).build();
@@ -45,9 +44,9 @@ function run() {
                 console.log(`3. click next month`);
                 let candidateCells = [];
                 let cells = yield driver.findElements(selenium_webdriver_1.By.className("calendar-day-cell"));
-                if (targetCellIndex >= 0) {
+                if (TARGET_CELL_INDEX >= 0) {
                     // know target index (more faster!)
-                    candidateCells.push(cells[targetCellIndex]);
+                    candidateCells.push(cells[TARGET_CELL_INDEX]);
                 }
                 else {
                     // find first available date
@@ -125,16 +124,16 @@ function run() {
                 yield driver.wait(selenium_webdriver_1.until.elementLocated(selenium_webdriver_1.By.id("name")), 1000).then(() => __awaiter(this, void 0, void 0, function* () {
                     yield driver
                         .findElement(selenium_webdriver_1.By.id("name"))
-                        .sendKeys("Cheng Wen Lin");
+                        .sendKeys(NAME);
                     yield driver
                         .findElement(selenium_webdriver_1.By.id("name_kana"))
-                        .sendKeys("Cheng Wen Lin");
+                        .sendKeys(NAME);
                     yield driver
                         .findElement(selenium_webdriver_1.By.id("phone_number"))
-                        .sendKeys("0970982035");
+                        .sendKeys(PHONE);
                     yield driver
                         .findElement(selenium_webdriver_1.By.id("email"))
-                        .sendKeys("victorlin12345@gmail.com");
+                        .sendKeys(EMAIL);
                     yield driver
                         .findElement(selenium_webdriver_1.By.xpath("//input[@name='commit']"))
                         .click();
