@@ -20,7 +20,7 @@ let PHONE = "88888888";
 let EMAIL = "victorlin12345@gmail.com";
 // target calendar cell index, if < 0 will get the first available day (optoinal)
 // reference: https://reserve.pokemon-cafe.jp/reserve/step2
-let TARGET_CELL_INDEX = -1;
+let TARGET_CELL_INDEX = 1;
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         const driver = yield new selenium_webdriver_1.Builder().forBrowser(selenium_webdriver_1.Browser.CHROME).build();
@@ -52,7 +52,7 @@ function run() {
                     // find first available date
                     for (let i = 0; i < cells.length; i++) {
                         let text = yield cells[i].getText();
-                        if (!text.includes("未開放") && !text.includes("満席")) {
+                        if (!text.includes("Full") && !text.includes("N/A")) {
                             console.log("available date:", text);
                             candidateCells.push(cells[i]);
                         }
@@ -60,7 +60,8 @@ function run() {
                 }
                 if (candidateCells.length > 0) {
                     yield candidateCells[0].click();
-                    console.log("4. click first candidate cell!", candidateCells[0].getText());
+                    let target = yield candidateCells[0].getText();
+                    console.log("4. click first candidate cell!", target.replace(/\r\n|\n/g, ""));
                 }
                 yield driver.findElement(selenium_webdriver_1.By.id("submit_button")).click();
                 console.log("5. click submit!");

@@ -14,7 +14,7 @@ let EMAIL = "victorlin12345@gmail.com"
 
 // target calendar cell index, if < 0 will get the first available day (optoinal)
 // reference: https://reserve.pokemon-cafe.jp/reserve/step2
-let TARGET_CELL_INDEX = -1; 
+let TARGET_CELL_INDEX = 1; 
 
 
 async function run() {
@@ -51,7 +51,7 @@ async function run() {
                     // find first available date
                     for (let i = 0; i < cells.length; i++) {
                         let text = await cells[i].getText();
-                        if (!text.includes("未開放") && !text.includes("満席")) {
+                        if (!text.includes("Full") && !text.includes("N/A")) {
                             console.log("available date:", text)
                             candidateCells.push(cells[i])
                         }
@@ -59,7 +59,8 @@ async function run() {
                 }
                 if (candidateCells.length > 0) {
                     await candidateCells[0].click();
-                    console.log("4. click first candidate cell!", candidateCells[0].getText())
+                    let target = await candidateCells[0].getText();
+                    console.log("4. click first candidate cell!", target.replace(/\r\n|\n/g,""));
                 }
 
                 await driver.findElement(By.id("submit_button")).click();
