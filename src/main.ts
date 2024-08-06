@@ -166,7 +166,17 @@ async function run() {
     ///////////////// TIME SELECT PAGE ////////////////
     ///////////////////////////////////////////////////
     let openTimes: WebElement[] = [];
-    await driver.wait(until.elementLocated(By.className("time-cell")), 1000);
+    try {
+      await driver.wait(until.elementLocated(By.className("time-cell")), 3000);
+    } catch {
+      console.log("refreshing calendar page (date)...");
+      await driver
+        .wait(
+          until.elementLocated(By.xpath(`//*[contains(text(), "Reloading")]`)),
+          10000
+        )
+        .click();
+    }
 
     // find available time, refresh every 1 sec
     let j = 0;
