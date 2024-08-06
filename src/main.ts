@@ -1,11 +1,4 @@
-import {
-  Builder,
-  Browser,
-  By,
-  until,
-  WebElement,
-  WebDriver,
-} from "selenium-webdriver";
+import { Browser, Builder, By, until, WebElement } from "selenium-webdriver";
 
 // number of people (required)
 const NUM_PEOPLE = 2;
@@ -38,15 +31,17 @@ async function run() {
       try {
         await driver.wait(
           until.elementLocated(By.xpath("//select[@name='guest']")),
-          1000
+          10000
         );
         calendarLoadSuccess = true;
       } catch {
         console.log("refreshing calendar page (load) ...");
         await driver
           .wait(
-            until.elementLocated(By.xpath(`//*[contains(text(), "loading")]`)),
-            1000
+            until.elementLocated(
+              By.xpath(`//*[contains(text(), "Reloading")]`)
+            ),
+            10000
           )
           .click();
       }
@@ -63,8 +58,10 @@ async function run() {
         console.log("refreshing calendar page (guest) ...");
         await driver
           .wait(
-            until.elementLocated(By.xpath(`//*[contains(text(), "loading")]`)),
-            1000
+            until.elementLocated(
+              By.xpath(`//*[contains(text(), "Reloading")]`)
+            ),
+            10000
           )
           .click();
       }
@@ -83,8 +80,10 @@ async function run() {
         console.log("refreshing calendar page (people number)...");
         await driver
           .wait(
-            until.elementLocated(By.xpath(`//*[contains(text(), "loading")]`)),
-            1000
+            until.elementLocated(
+              By.xpath(`//*[contains(text(), "Reloading")]`)
+            ),
+            10000
           )
           .click();
       }
@@ -99,7 +98,7 @@ async function run() {
             until.elementLocated(
               By.xpath(`//*[contains(text(), "次の月を見る")]`)
             ),
-            1000
+            10000
           )
           .click();
         console.log(`3. click next month`);
@@ -108,8 +107,10 @@ async function run() {
         console.log("refreshing calendar page (next month)...");
         await driver
           .wait(
-            until.elementLocated(By.xpath(`//*[contains(text(), "loading")]`)),
-            1000
+            until.elementLocated(
+              By.xpath(`//*[contains(text(), "Reloading")]`)
+            ),
+            10000
           )
           .click();
       }
@@ -152,8 +153,10 @@ async function run() {
         console.log("refreshing calendar page (date)...");
         await driver
           .wait(
-            until.elementLocated(By.xpath(`//*[contains(text(), "loading")]`)),
-            1000
+            until.elementLocated(
+              By.xpath(`//*[contains(text(), "Reloading")]`)
+            ),
+            10000
           )
           .click();
       }
@@ -184,37 +187,45 @@ async function run() {
         });
     }, 1000);
 
-    // priority for seating A
-    while (j < openTimes.length) {
-      const text = await openTimes[j].getText();
-      if (text.includes("A")) {
-        // pikachu area, iggypuff area
-        openTimes.push(openTimes[j]);
-      } else if (text.includes("C")) {
-        // eevee area
-        openTimes.push(openTimes[j]);
-      } else if (text.includes("D")) {
-        // lapras area
-        openTimes.push(openTimes[j]);
-      } else if (text.includes("B")) {
-        // snorlax area
-        openTimes.push(openTimes[j]);
-      }
-      console.log(text);
-      j++;
-    }
+    // // priority for seating A
+    // while (j < openTimes.length) {
+    //   const text = await openTimes[j].getText();
+    //   if (text.includes("A")) {
+    //     // pikachu area, iggypuff area
+    //     openTimes.push(openTimes[j]);
+    //   } else if (text.includes("C")) {
+    //     // eevee area
+    //     openTimes.push(openTimes[j]);
+    //   } else if (text.includes("D")) {
+    //     // lapras area
+    //     openTimes.push(openTimes[j]);
+    //   } else if (text.includes("B")) {
+    //     // snorlax area
+    //     openTimes.push(openTimes[j]);
+    //   }
+    //   console.log(text);
+    //   j++;
+    // }
 
-    let picked = 0;
-    for (let i = 0; i < openTimes.length; i++) {
+    // let picked = 0;
+    // for (let i = 0; i < openTimes.length; i++) {
+    //   try {
+    //     await openTimes[i].click();
+    //     picked = i;
+    //     break;
+    //   } catch {
+    //     console.log("try next open time...");
+    //   }
+    // }
+
+    if (openTimes.length > 0) {
       try {
-        await openTimes[i].click();
-        picked = i;
-        break;
+        await openTimes[0].click();
       } catch {
         console.log("try next open time...");
       }
+      console.log("6. click open time:", openTimes[0].getText());
     }
-    console.log("6. click open time:", openTimes[picked].getText());
 
     ///////////////////////////////////////////////////
     ///////////////// INPUT PAGE //////////////////////

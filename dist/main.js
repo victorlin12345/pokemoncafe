@@ -33,13 +33,13 @@ function run() {
             let calendarLoadSuccess = false;
             while (!calendarLoadSuccess) {
                 try {
-                    yield driver.wait(selenium_webdriver_1.until.elementLocated(selenium_webdriver_1.By.xpath("//select[@name='guest']")), 1000);
+                    yield driver.wait(selenium_webdriver_1.until.elementLocated(selenium_webdriver_1.By.xpath("//select[@name='guest']")), 10000);
                     calendarLoadSuccess = true;
                 }
                 catch (_a) {
                     console.log("refreshing calendar page (load) ...");
                     yield driver
-                        .wait(selenium_webdriver_1.until.elementLocated(selenium_webdriver_1.By.xpath(`//*[contains(text(), "loading")]`)), 1000)
+                        .wait(selenium_webdriver_1.until.elementLocated(selenium_webdriver_1.By.xpath(`//*[contains(text(), "Reloading")]`)), 10000)
                         .click();
                 }
             }
@@ -54,7 +54,7 @@ function run() {
                 catch (_b) {
                     console.log("refreshing calendar page (guest) ...");
                     yield driver
-                        .wait(selenium_webdriver_1.until.elementLocated(selenium_webdriver_1.By.xpath(`//*[contains(text(), "loading")]`)), 1000)
+                        .wait(selenium_webdriver_1.until.elementLocated(selenium_webdriver_1.By.xpath(`//*[contains(text(), "Reloading")]`)), 10000)
                         .click();
                 }
             }
@@ -71,7 +71,7 @@ function run() {
                 catch (_c) {
                     console.log("refreshing calendar page (people number)...");
                     yield driver
-                        .wait(selenium_webdriver_1.until.elementLocated(selenium_webdriver_1.By.xpath(`//*[contains(text(), "loading")]`)), 1000)
+                        .wait(selenium_webdriver_1.until.elementLocated(selenium_webdriver_1.By.xpath(`//*[contains(text(), "Reloading")]`)), 10000)
                         .click();
                 }
             }
@@ -80,7 +80,7 @@ function run() {
             while (!calendarNext) {
                 try {
                     yield driver
-                        .wait(selenium_webdriver_1.until.elementLocated(selenium_webdriver_1.By.xpath(`//*[contains(text(), "次の月を見る")]`)), 1000)
+                        .wait(selenium_webdriver_1.until.elementLocated(selenium_webdriver_1.By.xpath(`//*[contains(text(), "次の月を見る")]`)), 10000)
                         .click();
                     console.log(`3. click next month`);
                     calendarNext = true;
@@ -88,7 +88,7 @@ function run() {
                 catch (_d) {
                     console.log("refreshing calendar page (next month)...");
                     yield driver
-                        .wait(selenium_webdriver_1.until.elementLocated(selenium_webdriver_1.By.xpath(`//*[contains(text(), "loading")]`)), 1000)
+                        .wait(selenium_webdriver_1.until.elementLocated(selenium_webdriver_1.By.xpath(`//*[contains(text(), "Reloading")]`)), 10000)
                         .click();
                 }
             }
@@ -124,7 +124,7 @@ function run() {
                 catch (_e) {
                     console.log("refreshing calendar page (date)...");
                     yield driver
-                        .wait(selenium_webdriver_1.until.elementLocated(selenium_webdriver_1.By.xpath(`//*[contains(text(), "loading")]`)), 1000)
+                        .wait(selenium_webdriver_1.until.elementLocated(selenium_webdriver_1.By.xpath(`//*[contains(text(), "Reloading")]`)), 10000)
                         .click();
                 }
             }
@@ -152,40 +152,44 @@ function run() {
                     console.log(openTimes.length);
                 }));
             }), 1000);
-            // priority for seating A
-            while (j < openTimes.length) {
-                const text = yield openTimes[j].getText();
-                if (text.includes("A")) {
-                    // pikachu area, iggypuff area
-                    openTimes.push(openTimes[j]);
-                }
-                else if (text.includes("C")) {
-                    // eevee area
-                    openTimes.push(openTimes[j]);
-                }
-                else if (text.includes("D")) {
-                    // lapras area
-                    openTimes.push(openTimes[j]);
-                }
-                else if (text.includes("B")) {
-                    // snorlax area
-                    openTimes.push(openTimes[j]);
-                }
-                console.log(text);
-                j++;
-            }
-            let picked = 0;
-            for (let i = 0; i < openTimes.length; i++) {
+            // // priority for seating A
+            // while (j < openTimes.length) {
+            //   const text = await openTimes[j].getText();
+            //   if (text.includes("A")) {
+            //     // pikachu area, iggypuff area
+            //     openTimes.push(openTimes[j]);
+            //   } else if (text.includes("C")) {
+            //     // eevee area
+            //     openTimes.push(openTimes[j]);
+            //   } else if (text.includes("D")) {
+            //     // lapras area
+            //     openTimes.push(openTimes[j]);
+            //   } else if (text.includes("B")) {
+            //     // snorlax area
+            //     openTimes.push(openTimes[j]);
+            //   }
+            //   console.log(text);
+            //   j++;
+            // }
+            // let picked = 0;
+            // for (let i = 0; i < openTimes.length; i++) {
+            //   try {
+            //     await openTimes[i].click();
+            //     picked = i;
+            //     break;
+            //   } catch {
+            //     console.log("try next open time...");
+            //   }
+            // }
+            if (openTimes.length > 0) {
                 try {
-                    yield openTimes[i].click();
-                    picked = i;
-                    break;
+                    yield openTimes[0].click();
                 }
                 catch (_f) {
                     console.log("try next open time...");
                 }
+                console.log("6. click open time:", openTimes[0].getText());
             }
-            console.log("6. click open time:", openTimes[picked].getText());
             ///////////////////////////////////////////////////
             ///////////////// INPUT PAGE //////////////////////
             ///////////////////////////////////////////////////
