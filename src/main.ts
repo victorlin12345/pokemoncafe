@@ -179,76 +179,46 @@ async function run() {
     }
 
     // find available time, refresh every 1 sec
-    let j = 0;
-    const timeInterval = setInterval(async () => {
-      console.log("checking for available times");
-      await driver
-        .findElements(By.xpath('//a[@class="level post-link"]'))
-        .then(async (times) => {
-          openTimes = times;
-          console.log(times);
-          if (openTimes.length !== 0) {
-            clearInterval(timeInterval);
-          } else {
-            console.log("no availability found! Refreshing");
-            driver.navigate().refresh();
-          }
-          console.log(openTimes.length);
-        });
-    }, 1000);
-
-    // // priority for seating A
-    // while (j < openTimes.length) {
-    //   const text = await openTimes[j].getText();
-    //   if (text.includes("A")) {
-    //     // pikachu area, iggypuff area
-    //     openTimes.push(openTimes[j]);
-    //   } else if (text.includes("C")) {
-    //     // eevee area
-    //     openTimes.push(openTimes[j]);
-    //   } else if (text.includes("D")) {
-    //     // lapras area
-    //     openTimes.push(openTimes[j]);
-    //   } else if (text.includes("B")) {
-    //     // snorlax area
-    //     openTimes.push(openTimes[j]);
-    //   }
-    //   console.log(text);
-    //   j++;
-    // }
-
-    // let picked = 0;
-    // for (let i = 0; i < openTimes.length; i++) {
-    //   try {
-    //     await openTimes[i].click();
-    //     picked = i;
-    //     break;
-    //   } catch {
-    //     console.log("try next open time...");
-    //   }
-    // }
-
-    if (openTimes.length > 0) {
+    let clickTimeCell = false;
+    while (!clickTimeCell) {
       try {
-        await openTimes[0].click();
+        let timeCells = await driver.findElements(
+          By.xpath('//a[@class="level post-link"]')
+        );
+        if (timeCells.length > 0) {
+          await timeCells[0].click();
+          console.log("6. click open time!");
+          clickTimeCell = true;
+        } else {
+          await sleep(1000);
+          console.log("refreshing time select page...");
+          await driver.navigate().refresh();
+        }
       } catch {
-        console.log("try next open time...");
+        await sleep(1000);
+        console.log("refreshing time select page...");
+        await driver.navigate().refresh();
       }
-      console.log("6. click open time:", openTimes[0].getText());
     }
-
+    // wait for input page to load
     ///////////////////////////////////////////////////
     ///////////////// INPUT PAGE //////////////////////
     ///////////////////////////////////////////////////
-    await driver
-      .wait(until.elementLocated(By.id("name")), 1000)
-      .then(async () => {
-        await driver.findElement(By.id("name")).sendKeys(NAME);
-        await driver.findElement(By.id("name_kana")).sendKeys(NAME);
-        await driver.findElement(By.id("phone_number")).sendKeys(PHONE);
-        await driver.findElement(By.id("email")).sendKeys(EMAIL);
-        await driver.findElement(By.xpath("//input[@name='commit']")).click();
-      });
+    try {
+      await driver
+        .wait(until.elementLocated(By.id("name")), 10000)
+        .then(async () => {
+          await driver.findElement(By.id("name")).sendKeys(NAME);
+          await driver.findElement(By.id("name_kana")).sendKeys(NAME);
+          await driver.findElement(By.id("phone_number")).sendKeys(PHONE);
+          await driver.findElement(By.id("email")).sendKeys(EMAIL);
+          await driver.findElement(By.xpath("//input[@name='commit']")).click();
+        });
+    } catch {
+      await sleep(1000);
+      console.log("refreshing input page ...");
+      await driver.navigate().refresh();
+    }
 
     /////////////////////////////////////////////////
     ///////////////// CONFIRM PAGE //////////////////
@@ -266,5 +236,7 @@ async function run() {
     // await driver.quit();
   }
 }
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 run();

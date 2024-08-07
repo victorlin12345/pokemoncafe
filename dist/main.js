@@ -142,74 +142,47 @@ function run() {
                     .click();
             }
             // find available time, refresh every 1 sec
-            let j = 0;
-            const timeInterval = setInterval(() => __awaiter(this, void 0, void 0, function* () {
-                console.log("checking for available times");
-                yield driver
-                    .findElements(selenium_webdriver_1.By.xpath('//a[@class="level post-link"]'))
-                    .then((times) => __awaiter(this, void 0, void 0, function* () {
-                    openTimes = times;
-                    console.log(times);
-                    if (openTimes.length !== 0) {
-                        clearInterval(timeInterval);
+            let clickTimeCell = false;
+            while (!clickTimeCell) {
+                try {
+                    let timeCells = yield driver.findElements(selenium_webdriver_1.By.xpath('//a[@class="level post-link"]'));
+                    if (timeCells.length > 0) {
+                        yield timeCells[0].click();
+                        console.log("6. click open time!");
+                        clickTimeCell = true;
                     }
                     else {
-                        console.log("no availability found! Refreshing");
-                        driver.navigate().refresh();
+                        yield sleep(1000);
+                        console.log("refreshing time select page...");
+                        yield driver.navigate().refresh();
                     }
-                    console.log(openTimes.length);
-                }));
-            }), 1000);
-            // // priority for seating A
-            // while (j < openTimes.length) {
-            //   const text = await openTimes[j].getText();
-            //   if (text.includes("A")) {
-            //     // pikachu area, iggypuff area
-            //     openTimes.push(openTimes[j]);
-            //   } else if (text.includes("C")) {
-            //     // eevee area
-            //     openTimes.push(openTimes[j]);
-            //   } else if (text.includes("D")) {
-            //     // lapras area
-            //     openTimes.push(openTimes[j]);
-            //   } else if (text.includes("B")) {
-            //     // snorlax area
-            //     openTimes.push(openTimes[j]);
-            //   }
-            //   console.log(text);
-            //   j++;
-            // }
-            // let picked = 0;
-            // for (let i = 0; i < openTimes.length; i++) {
-            //   try {
-            //     await openTimes[i].click();
-            //     picked = i;
-            //     break;
-            //   } catch {
-            //     console.log("try next open time...");
-            //   }
-            // }
-            if (openTimes.length > 0) {
-                try {
-                    yield openTimes[0].click();
                 }
                 catch (_g) {
-                    console.log("try next open time...");
+                    yield sleep(1000);
+                    console.log("refreshing time select page...");
+                    yield driver.navigate().refresh();
                 }
-                console.log("6. click open time:", openTimes[0].getText());
             }
+            // wait for input page to load
             ///////////////////////////////////////////////////
             ///////////////// INPUT PAGE //////////////////////
             ///////////////////////////////////////////////////
-            yield driver
-                .wait(selenium_webdriver_1.until.elementLocated(selenium_webdriver_1.By.id("name")), 1000)
-                .then(() => __awaiter(this, void 0, void 0, function* () {
-                yield driver.findElement(selenium_webdriver_1.By.id("name")).sendKeys(NAME);
-                yield driver.findElement(selenium_webdriver_1.By.id("name_kana")).sendKeys(NAME);
-                yield driver.findElement(selenium_webdriver_1.By.id("phone_number")).sendKeys(PHONE);
-                yield driver.findElement(selenium_webdriver_1.By.id("email")).sendKeys(EMAIL);
-                yield driver.findElement(selenium_webdriver_1.By.xpath("//input[@name='commit']")).click();
-            }));
+            try {
+                yield driver
+                    .wait(selenium_webdriver_1.until.elementLocated(selenium_webdriver_1.By.id("name")), 10000)
+                    .then(() => __awaiter(this, void 0, void 0, function* () {
+                    yield driver.findElement(selenium_webdriver_1.By.id("name")).sendKeys(NAME);
+                    yield driver.findElement(selenium_webdriver_1.By.id("name_kana")).sendKeys(NAME);
+                    yield driver.findElement(selenium_webdriver_1.By.id("phone_number")).sendKeys(PHONE);
+                    yield driver.findElement(selenium_webdriver_1.By.id("email")).sendKeys(EMAIL);
+                    yield driver.findElement(selenium_webdriver_1.By.xpath("//input[@name='commit']")).click();
+                }));
+            }
+            catch (_h) {
+                yield sleep(1000);
+                console.log("refreshing input page ...");
+                yield driver.navigate().refresh();
+            }
             /////////////////////////////////////////////////
             ///////////////// CONFIRM PAGE //////////////////
             /////////////////////////////////////////////////
@@ -226,4 +199,5 @@ function run() {
         }
     });
 }
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 run();
