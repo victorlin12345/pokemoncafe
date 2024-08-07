@@ -20,7 +20,7 @@ let PHONE = "0970982035";
 let EMAIL = "victorlin12345@gmail.com";
 // target calendar cell index, if < 0 will get the first available day (optoinal)
 // reference: https://reserve.pokemon-cafe.jp/reserve/step2
-let TARGET_CELL_INDEX = 5;
+let TARGET_CELL_INDEX = 7;
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         const driver = yield new selenium_webdriver_1.Builder().forBrowser(selenium_webdriver_1.Browser.CHROME).build();
@@ -132,7 +132,15 @@ function run() {
             ///////////////// TIME SELECT PAGE ////////////////
             ///////////////////////////////////////////////////
             let openTimes = [];
-            yield driver.wait(selenium_webdriver_1.until.elementLocated(selenium_webdriver_1.By.className("time-cell")), 1000);
+            try {
+                yield driver.wait(selenium_webdriver_1.until.elementLocated(selenium_webdriver_1.By.className("time-cell")), 3000);
+            }
+            catch (_f) {
+                console.log("refreshing calendar page (date)...");
+                yield driver
+                    .wait(selenium_webdriver_1.until.elementLocated(selenium_webdriver_1.By.xpath(`//*[contains(text(), "Reloading")]`)), 10000)
+                    .click();
+            }
             // find available time, refresh every 1 sec
             let j = 0;
             const timeInterval = setInterval(() => __awaiter(this, void 0, void 0, function* () {
@@ -185,7 +193,7 @@ function run() {
                 try {
                     yield openTimes[0].click();
                 }
-                catch (_f) {
+                catch (_g) {
                     console.log("try next open time...");
                 }
                 console.log("6. click open time:", openTimes[0].getText());
